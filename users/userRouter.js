@@ -2,28 +2,28 @@ const express = 'express';
 
 const router = express.Router();
 
-router.post('/',validateUser, (req, res) => {
+router.post('/',validateUser, logger, (req, res) => {
+    
+});
+
+router.post ('/:id/posts', validateUserId, validatePost,logger, (req, res) => {
 
 });
 
-router.post ('/:id/posts', validateUserId, validatePost, (req, res) => {
-
-});
-
-router.get('/', (req, res) => {
+router.get('/', logger,(req, res) => {
     users.get()
     .then(results => res.json(results))
     .catch(err => res.json(err))
 });
 
-router.get('/:id',validateUserId, (req, res) => {
+router.get('/:id',validateUserId,logger, (req, res) => {
     const id = req.params.id;
     users.getByID(id)
     .then(results => res.json(results))
     .catch(err => console.log("certainly not", err))
 });
 
-router.get('/:id/posts',validateUserId,validatePost, (req, res) => {
+router.get('/:id/posts',validateUserId,validatePost,logger, (req, res) => {
     users.getUserPosts(req.params.id)
     .then(results => {
         res.json(results)
@@ -32,14 +32,14 @@ router.get('/:id/posts',validateUserId,validatePost, (req, res) => {
     .catch(err => res.send(err))
 });
 
-router.delete('/:id',validateUserId, (req, res) => {
+router.delete('/:id',validateUserId, logger,  (req, res) => {
     users.remove(req.params.id)
     .then(results => {
         res.json(results);
     })
 });
 
-router.put('/:id',validateUserId, (req, res) => {
+router.put('/:id',validateUserId, logger, (req, res) => {
 
 });
 
@@ -75,5 +75,12 @@ function validatePost(req, res, next) {
         next();
     }
 };
+
+function logger(req, res, next) {
+    const now = new Date(). toISOString();
+    console.log(req.method, req.url, now)
+
+    next();
+}
 
 module.exports = router;
